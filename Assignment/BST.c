@@ -56,6 +56,35 @@ void inorder(node root){
     inorder(root->right);
 }
 
+int minValue(node root){
+    while(root->left != NULL){
+        root = root->left;
+    }
+    return root->data;
+}
+
+node delete(node root, int val){
+    if(root->data > val){
+        root->left = delete(root->left, val);
+    }else if(root->data < val){
+        root->right = delete(root->right, val);
+    }else{
+        if(root->left == NULL && root->right == NULL){
+            return NULL;
+        }
+
+        if(root->left == NULL){
+            return root->right;
+        }
+        else if(root->right == NULL){
+            return root->left;
+        }
+        root->data = minValue(root->right);
+        root->right = delete(root->right, root->data); 
+    }
+    return root;
+}
+
 node insertFromFile(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -96,6 +125,9 @@ int main() {
     double time_taken = (double)(end.QuadPart - start.QuadPart) * 1e6 / frequency.QuadPart;
     printf("\nTime taken for searching: %lf microseconds\n", time_taken);
 
+    // delete(root,25);
+    // inorder(root);
+
     return 0;
 }
 
@@ -103,7 +135,6 @@ int main() {
 //      const char* filename = "case1.txt";
 //      node root = insertFromFile(filename);
 
-//      Inorder traversal of the tree
 //      printf("Inorder Traversal: ");
 //      inorder(root);
 
