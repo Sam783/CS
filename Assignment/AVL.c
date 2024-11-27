@@ -232,3 +232,33 @@ void main() {
     // inorder(root);
     printf("\nTime taken for searching: %lf microseconds\n", time_taken);
 }
+
+// void main() {
+//     const char* filename = "case1.txt";
+//     node root = insertFromFile(filename);
+
+//     printf("Inorder Traversal: ");
+//     inorder(root);
+//     printf("\n");
+
+//     struct timespec start, end;
+
+//     // Get start time
+//     clock_gettime(CLOCK_MONOTONIC, &start);
+
+//     // Get end time
+//     clock_gettime(CLOCK_MONOTONIC, &end);
+
+//     if (search(root, 25)) {
+//         printf("\nKey found");
+//     } else {
+//         printf("\nKey not found");
+//     }
+
+//     printf("\n");
+//     delete(root,25);
+//     inorder(root);
+
+//     double time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+//     printf("\nTime taken for searching: %lf microseconds\n", time_taken);
+// }
