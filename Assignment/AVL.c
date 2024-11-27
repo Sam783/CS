@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<windows.h>
+// #include<time.h>
 
 typedef struct Node* node;
 
@@ -68,6 +69,59 @@ node insertNode(node root, int val){
     }
     else{
         return root;
+    }
+
+    root->height = max_h(height(root->left), height(root->right)) + 1;
+    int bf = balance(root);
+
+    if(bf > 1 && val < root->left->data){ //LL
+        return rightRotate(root);
+    }
+
+    if(bf < -1 && val > root->right->data){ //RR
+        return leftRotate(root);
+    }
+
+    if(bf > 1 && val > root->left->data){ //LR
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+
+    if(bf < -1 && val < root->right->data){ //RL
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+
+    return root;
+}
+
+int minValue(node root) {
+    while(root->left != NULL){
+        root = root->left;
+    }
+    return root->data;
+}
+
+node delete(node root, int val){
+    if(root->data > val){
+        root->left = delete(root->left,val);
+    }else if(root->data < val){
+        root->right = delete(root->right,val);
+    }else{
+        // case-1 : no child
+        if(root->left == NULL && root->right == NULL){
+            return NULL;
+        }
+
+        // case-2 : one child 
+        if(root->left == NULL){
+            return root->right;
+        }else if(root->right == NULL){
+            return root->left;
+        }
+        // case-3 : two child
+        root->data = minValue(root->right);
+        root->right = delete(root->right, root->data);
     }
 
     root->height = max_h(height(root->left), height(root->right)) + 1;
@@ -173,5 +227,8 @@ void main() {
 
     QueryPerformanceCounter(&end);
     double time_taken = (double)(end.QuadPart - start.QuadPart) * 1e6 / frequency.QuadPart;
+    // printf("\n");
+    // delete(root,25);
+    // inorder(root);
     printf("\nTime taken for searching: %lf microseconds\n", time_taken);
 }
