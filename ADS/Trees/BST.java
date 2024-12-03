@@ -1,4 +1,4 @@
-class Tree{
+class BST{
     static class Node{
         int data;
         Node left;
@@ -101,7 +101,7 @@ class Tree{
     }
 
     public static void main(String args[]){
-        Tree t = new Tree();
+        BST t = new BST();
         Node root = null;
         int values[] = {8,5,3,1,4,6,10,11,14};
         for(int i=0; i<values.length; i++){
