@@ -23,6 +23,9 @@ print("Intercept: ", intercept)
 
 line = list(map(func, x))
 
+predict = func(10)
+print(predict)
+
 plt.scatter(x, y)
 plt.plot(x, line, color='blue')
 plt.title("Scatter Plot of Data Points")
