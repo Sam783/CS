@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<windows.h>
-// #include<time.h>
+#include<time.h>
 
 typedef struct Node* node;
 
@@ -206,59 +205,39 @@ node insertFromFile(const char* filename) {
     return root;
 }
 
+
 void main() {
-    const char* filename = "case1.txt";
-    node root = insertFromFile(filename);
+     const char* filename = "case3b.txt";
+     struct timespec start, end;
+     double time_taken;
+     
+     clock_gettime(CLOCK_MONOTONIC, &start);
+     node root = insertFromFile(filename);
+	 clock_gettime(CLOCK_MONOTONIC, &end);
+	 time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+	 
+     printf("Inorder Traversal: ");
+     inorder(root);
+     printf("\n");
 
-    printf("Inorder traversal: ");
-    inorder(root);
-    printf("\n");
+	 printf("\nTime taken for insertion: %lf microseconds", time_taken);
 
-
-    LARGE_INTEGER start, end, frequency;
-    QueryPerformanceFrequency(&frequency);
-    QueryPerformanceCounter(&start);
-
-    if(search(root, 95)){
-        printf("\nKey found");
-    }else{
-        printf("\nKey not found");
-    }
-
-    QueryPerformanceCounter(&end);
-    double time_taken = (double)(end.QuadPart - start.QuadPart) * 1e6 / frequency.QuadPart;
-    // printf("\n");
-    // delete(root,25);
-    // inorder(root);
-    printf("\nTime taken for searching: %lf microseconds\n", time_taken);
+	 
+	 clock_gettime(CLOCK_MONOTONIC, &start);
+     if (search(root, 25)) {
+         printf("\nKey found");
+     } else {
+         printf("\nKey not found");
+     }
+     clock_gettime(CLOCK_MONOTONIC, &end);
+     
+     time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+     printf("\nTime taken for searching: %lf microseconds", time_taken);
+     
+     clock_gettime(CLOCK_MONOTONIC, &start);
+     delete(root,25);
+	 clock_gettime(CLOCK_MONOTONIC, &end);
+	 
+     time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+     printf("\nTime taken for deletion: %lf microseconds\n", time_taken);
 }
-
-// void main() {
-//     const char* filename = "case1.txt";
-//     node root = insertFromFile(filename);
-
-//     printf("Inorder Traversal: ");
-//     inorder(root);
-//     printf("\n");
-
-//     struct timespec start, end;
-
-//     // Get start time
-//     clock_gettime(CLOCK_MONOTONIC, &start);
-
-//     // Get end time
-//     clock_gettime(CLOCK_MONOTONIC, &end);
-
-//     if (search(root, 25)) {
-//         printf("\nKey found");
-//     } else {
-//         printf("\nKey not found");
-//     }
-
-//     printf("\n");
-//     delete(root,25);
-//     inorder(root);
-
-//     double time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
-//     printf("\nTime taken for searching: %lf microseconds\n", time_taken);
-// }
