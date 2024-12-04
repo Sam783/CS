@@ -1,24 +1,23 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include <windows.h>
-// #include<time.h>
-
-typedef struct Node* node;
-
+//#include <windows.h>
+#include<time.h>
 struct Node {
     int data;
-    node left;
-    node right;
+    struct Node* left;
+    struct Node* right;
 };
 
-node createNode(int data){
-    node newNode = (node)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->left = newNode->right = NULL;
-    return newNode;
+typedef struct Node* myNode;
+
+myNode createNode(int data){
+    myNode node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
 }
 
-node insert(node root, int data){
+myNode insert(myNode root, int data){
     if(root == NULL){
         return createNode(data);
     }
@@ -31,7 +30,7 @@ node insert(node root, int data){
     return root;
 }
 
-int search(node root, int key){
+int search(myNode root, int key){
     if(root == NULL){
         return 0;
     }
@@ -47,7 +46,7 @@ int search(node root, int key){
     return 0;
 }
 
-void inorder(node root){
+void inorder(myNode root){
     if(root == NULL){
         return;
     }
@@ -56,42 +55,59 @@ void inorder(node root){
     inorder(root->right);
 }
 
-int minValue(node root){
-    while(root->left != NULL){
-        root = root->left;
-    }
-    return root->data;
+int getInorderSuccessor(myNode root){
+    if(root->left==NULL)
+        return root->data;
+    else
+        return getInorderSuccessor(root->left);
 }
 
-node delete(node root, int val){
-    if(root->data > val){
-        root->left = delete(root->left, val);
-    }else if(root->data < val){
-        root->right = delete(root->right, val);
-    }else{
-        if(root->left == NULL && root->right == NULL){
+myNode deleteNode(myNode root,int key){
+    if(root==NULL)
+    {
+        printf("Key Element %d not found\n",key);
+        return root;
+    }
+    else if(root->data==key)
+    {
+        if(root->left==NULL && root->right==NULL)
+        {
+            free(root);
             return NULL;
         }
-
-        if(root->left == NULL){
-            return root->right;
+        else if(root->left==NULL){
+            myNode temp=root->right;
+            free(root);
+            return temp;
         }
-        else if(root->right == NULL){
-            return root->left;
+        else if(root->right==NULL)
+        {
+            myNode temp=root->left;
+            free(root);
+            return temp;
         }
-        root->data = minValue(root->right);
-        root->right = delete(root->right, root->data); 
+        else{
+            root->data=getInorderSuccessor(root->right);
+            root->right=deleteNode(root->right,root->data);
+        }
+    }
+    else if(key<root->data)
+    {
+        root->left=deleteNode(root->left,key);
+    }
+    else{
+        root->right=deleteNode(root->right,key);
     }
     return root;
 }
 
-node insertFromFile(const char* filename) {
+myNode insertFromFile(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         printf("Could not open file");
         return NULL;
     }
-    node root = NULL;
+    struct Node* root = NULL;
     int num;
     while (fscanf(file, "%d", &num) == 1) {
         root = insert(root, num);
@@ -101,64 +117,46 @@ node insertFromFile(const char* filename) {
 }
 
 int main() {
-    const char* filename = "case3b.txt";
-    node root = insertFromFile(filename);
+     const char* filename = "case3b.txt";
+     struct timespec start, end;
+	 double time_taken;
+     
+     clock_gettime(CLOCK_MONOTONIC, &start);
+     struct Node* root = insertFromFile(filename);
+     clock_gettime(CLOCK_MONOTONIC, &end);
+     time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+     
+     printf("Inorder Traversal: ");
+     inorder(root);
+     
+     
 
-    printf("Inorder Traversal: ");
-    inorder(root);
+     int key = 25;
 
-    int key = 25;
-    LARGE_INTEGER start, end, frequency;
+     printf("\nTime taken for insertion: %lf microseconds", time_taken);
 
-    QueryPerformanceFrequency(&frequency);
+     clock_gettime(CLOCK_MONOTONIC, &start);
 
-    QueryPerformanceCounter(&start);
-    int found = search(root, key);
-    QueryPerformanceCounter(&end);
+     int found = search(root, key);
 
-    if (found) {
-        printf("\nKey found");
-    } else {
-        printf("\nKey not found");
-    }
-    
-    double time_taken = (double)(end.QuadPart - start.QuadPart) * 1e6 / frequency.QuadPart;
-    printf("\nTime taken for searching: %lf microseconds\n", time_taken);
+     clock_gettime(CLOCK_MONOTONIC, &end);
 
-    // delete(root,25);
-    // inorder(root);
+     
+     if (found) {
+         printf("\nKey found");
+     } else {
+         printf("\nKey not found");
+     }
 
-    return 0;
+     time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+     printf("\nTime taken for searching: %lf microseconds\n", time_taken);
+	 
+	 clock_gettime(CLOCK_MONOTONIC, &start);
+	 deleteNode(root,5);
+	 clock_gettime(CLOCK_MONOTONIC, &end);
+	 
+	 time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
+     printf("Time taken for deletion: %lf microseconds\n", time_taken);
+     
+     return 0;
 }
-
-// int main() {
-//      const char* filename = "case1.txt";
-//      node root = insertFromFile(filename);
-
-//      printf("Inorder Traversal: ");
-//      inorder(root);
-
-//      int key = 25;
-
-//      struct timespec start, end;
-
-//      // Get start time
-//      clock_gettime(CLOCK_MONOTONIC, &start);
-
-//      // Perform search
-//      int found = search(root, key);
-
-//      // Get end time
-//      clock_gettime(CLOCK_MONOTONIC, &end);
-
-//      if (found) {
-//          printf("\nKey found");
-//      } else {
-//          printf("\nKey not found");
-//      }
-
-//      double time_taken = (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_nsec - start.tv_nsec) / 1e3;
-//      printf("\nTime taken for searching: %lf microseconds\n", time_taken);
-
-//      return 0;
-// }
