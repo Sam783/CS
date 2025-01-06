@@ -10,7 +10,6 @@ import pandas as pd
 # for col in df.columns:
 #     if df[col].dtype == 'object':
 #         df[col] = label_encoder.fit_transform(df[col])
-
 # X = df.drop(['Buys Computer'], axis=1)
 # y = df['Buys Computer']
 
@@ -27,4 +26,5 @@ y = [0,0,1,1,1,0,1,0,1,1]
 dtc = DecisionTreeClassifier(criterion='entropy')
 dtc.fit(X,y)
 tree.plot_tree(dtc,filled=True,feature_names=['Age','Income'],class_names=["No","Yes"])
+plt.title("Decision Tree for Buying a computer")
 plt.show()
