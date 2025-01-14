@@ -13,7 +13,7 @@ typedef struct Node* Node;
 Node root = NULL;
 
 Node create_node(int data) {
-    Node new_node = (Node)malloc(sizeof(struct Node));  // Fixed allocation
+    Node new_node = (Node)malloc(sizeof(struct Node));
     new_node->data = data;
     new_node->color = 'R';
     new_node->left = new_node->right = new_node->parent = NULL;
