@@ -4,9 +4,9 @@ class MergeSort{
         int n = a.length;
         mergeSort(a,0,a.length-1);
         for(int i : a){
-			System.out.print(i+" ");
+        System.out.print(i+" ");
         }
-	}
+    }
     
     public static void mergeSort(int a[], int l, int r){
         if(l < r){
