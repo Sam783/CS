@@ -1,32 +1,32 @@
-class SingleLL{
-    Node head;
-
-    class Node{
+class DoubleLL {
+    Node head, tail;
+    class Node {
         int data;
-        Node next;
-
+        Node prev, next;
         Node(int data){
             this.data = data;
-            this.next = null;
+            this.prev = this.next = null;
         }
     }
 
     public void add(int data){
         Node newNode = new Node(data);
         if(head == null){
-            head = newNode;
+            head = tail = newNode;
             return;
         }
-        newNode.next = head;
-        head = newNode;
+        tail.next = newNode;
+        newNode.prev = tail;
+        tail = newNode;
     }
 
     public void delete(){
-        if (head == null){
+        if(head == null){
             System.out.println("Queue is empty");
             return;
         }
         head = head.next;
+        head.prev = null;
     }
 
     public void display(){
@@ -39,7 +39,7 @@ class SingleLL{
     }
 
     public static void main(String args[]){
-        SingleLL list = new SingleLL();
+        DoubleLL list = new DoubleLL();
         list.add(10);
         list.add(20);
         list.add(30);
