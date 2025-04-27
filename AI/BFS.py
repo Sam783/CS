@@ -25,12 +25,3 @@ def bfs(visited, graph, node):
         queue.append(neighbour)
 
 bfs(visited, graph, 'S')
-
-# visited=[]
-# def dfs(visited,graph,node):
-#     if node not in visited:
-#         print(node)
-#         visited.append(node)
-#         for neighbour in graph[node]:
-#             dfs(visited,graph,neighbour)
-# dfs(visited,graph,'9')
